@@ -128,6 +128,9 @@ runs:
         # Replace a logo link with a redirect to the latest version of the report
         sed -i 's|<a href="." class=|<a href="https://'${BUCKET}'.s3.amazonaws.com/'${REPORT_PREFIX}'/latest/index.html?nocache='"'+Date.now()+'"'" class=|g' ${WORKDIR}/report/app.js
 
+        # Delete previous version of report
+        time aws s3 rm --recursive --only-show-errors "s3://${BUCKET}/${REPORT_PREFIX}/${GITHUB_RUN_ID}"
+
         # Upload a history and the final report (in this particular order to not to have duplicated history in 2 places)
         time aws s3 mv --recursive --only-show-errors "${WORKDIR}/report/history" "s3://${BUCKET}/${REPORT_PREFIX}/latest/history"
         time aws s3 mv --recursive --only-show-errors "${WORKDIR}/report" "s3://${BUCKET}/${REPORT_PREFIX}/${GITHUB_RUN_ID}"
