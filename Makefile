@@ -72,11 +72,14 @@ neon: postgres-headers
 $(POSTGRES_INSTALL_DIR)/build/%/config.status:
 	+@echo "Configuring Postgres $* build"
 	mkdir -p $(POSTGRES_INSTALL_DIR)/build/$*
-	(cd $(POSTGRES_INSTALL_DIR)/build/$* && \
-	env PATH="$(EXTRA_PATH_OVERRIDES):$$PATH" $(ROOT_PROJECT_DIR)/vendor/postgres-$*/configure \
+
+	VERSION=$*; \
+	EXTRA_VERSION=$$(cd $(ROOT_PROJECT_DIR)/vendor/postgres-$$VERSION && git rev-parse HEAD); \
+	(cd $(POSTGRES_INSTALL_DIR)/build/$$VERSION && \
+	env PATH="$(EXTRA_PATH_OVERRIDES):$$PATH" $(ROOT_PROJECT_DIR)/vendor/postgres-$$VERSION/configure \
 		CFLAGS='$(PG_CFLAGS)' \
-		$(PG_CONFIGURE_OPTS) \
-		--prefix=$(abspath $(POSTGRES_INSTALL_DIR))/$* > configure.log)
+		$(PG_CONFIGURE_OPTS) --with-extra-version=" $$EXTRA_VERSION" \
+		--prefix=$(abspath $(POSTGRES_INSTALL_DIR))/$$VERSION > configure.log)
 
 # nicer alias to run 'configure'
 # Note: I've been unable to use templates for this part of our configuration.
