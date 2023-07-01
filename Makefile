@@ -78,7 +78,7 @@ $(POSTGRES_INSTALL_DIR)/build/%/config.status:
 	(cd $(POSTGRES_INSTALL_DIR)/build/$$VERSION && \
 	env PATH="$(EXTRA_PATH_OVERRIDES):$$PATH" $(ROOT_PROJECT_DIR)/vendor/postgres-$$VERSION/configure \
 		CFLAGS='$(PG_CFLAGS)' \
-		$(PG_CONFIGURE_OPTS) --with-extra-version=" 1144aee1661c79eec65e784a8dad8bd450d9df79" \
+		$(PG_CONFIGURE_OPTS) --with-extra-version=" 1984832c740a7fa0e468bb720f40c525b652835d" \
 		--prefix=$(abspath $(POSTGRES_INSTALL_DIR))/$$VERSION > configure.log)
 
 # nicer alias to run 'configure'
