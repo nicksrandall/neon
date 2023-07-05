@@ -173,6 +173,8 @@ jobs:
         with:
           submodules: true
           fetch-depth: 1
+          # Fetch exactly HEAD of the PR, not the merge commit
+          ref: ${{ env.GIT_VERSION }}
 
       - name: Set pg 14 revision for caching
         id: pg_v14_rev

@@ -36,6 +36,8 @@ jobs:
         with:
           submodules: true
           fetch-depth: 1
+          # Fetch exactly HEAD of the PR, not the merge commit
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Install macOS postgres dependencies
         run: brew install flex bison openssl protobuf
