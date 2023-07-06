@@ -45,6 +45,7 @@ use std::sync::{Mutex, RwLock};
 use std::time::{Duration, Instant};
 
 use self::config::TenantConf;
+use self::delete::DeleteTenantFlow;
 use self::metadata::TimelineMetadata;
 use self::remote_timeline_client::RemoteTimelineClient;
 use self::timeline::EvictionTaskTenantState;
@@ -92,6 +93,7 @@ mod remote_timeline_client;
 pub mod storage_layer;
 
 pub mod config;
+pub mod delete;
 pub mod mgr;
 pub mod tasks;
 pub mod upload_queue;
@@ -157,6 +159,8 @@ pub struct Tenant {
     cached_synthetic_tenant_size: Arc<AtomicU64>,
 
     eviction_task_tenant_state: tokio::sync::Mutex<EvictionTaskTenantState>,
+
+    pub delete_progress: Arc<tokio::sync::Mutex<DeleteTenantFlow>>,
 }
 
 /// A timeline with some of its files on disk, being initialized.
@@ -495,6 +499,7 @@ impl std::fmt::Display for WaitToBecomeActiveError {
     }
 }
 
+#[derive(Debug)]
 pub(crate) enum ShutdownError {
     AlreadyStopping,
 }
@@ -2241,6 +2246,7 @@ impl Tenant {
             cached_logical_sizes: tokio::sync::Mutex::new(HashMap::new()),
             cached_synthetic_tenant_size: Arc::new(AtomicU64::new(0)),
             eviction_task_tenant_state: tokio::sync::Mutex::new(EvictionTaskTenantState::default()),
+            delete_progress: Arc::new(tokio::sync::Mutex::new(DeleteTenantFlow::default())),
         }
     }
 
