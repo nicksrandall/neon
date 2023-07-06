@@ -1,5 +1,6 @@
 //!
 
+pub mod delete;
 mod eviction_task;
 mod walreceiver;
 
@@ -82,13 +83,13 @@ use self::eviction_task::EvictionTaskTimelineState;
 use self::walreceiver::{WalReceiver, WalReceiverConf};
 
 use super::config::TenantConf;
-use super::delete::DeleteTimelineFlow;
 use super::layer_map::BatchedUpdates;
 use super::remote_timeline_client::index::IndexPart;
 use super::remote_timeline_client::RemoteTimelineClient;
 use super::storage_layer::{
     DeltaLayer, ImageLayer, Layer, LayerAccessStatsReset, PersistentLayerDesc, PersistentLayerKey,
 };
+use delete::DeleteTimelineFlow;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub(super) enum FlushLoopState {
